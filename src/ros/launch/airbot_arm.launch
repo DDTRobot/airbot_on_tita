@@ -1,5 +1,5 @@
 <launch>
-    <arg name="urdf" default="" />
+    <arg name="urdf" default="/usr/local/share/airbot_models/airbot_play_with_gripper.urdf" />
     <arg name="interface" default="can1" />
     <arg name="end_mode" default="newteacher" />
     <!-- <arg name="joy_dev" default="/dev/input/js0" /> -->
