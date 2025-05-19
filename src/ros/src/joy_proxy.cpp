@@ -45,6 +45,13 @@ class JoyLatch {
     ros::Rate loop(200);
     while (ros::ok()) {
       // std::lock_guard<std::mutex> lock(mutex_);
+      for(int i = 0; i < joy_msgs_.axes.size(); i++)
+        {
+          if (joy_msgs_.axes[i] < 0.05 && joy_msgs_.axes[i] > -0.05)
+          {
+            joy_msgs_.axes[i] = 0;
+          }        
+        }
       pub_latch_.publish(joy_msgs_);
       ros::spinOnce();
       loop.sleep();

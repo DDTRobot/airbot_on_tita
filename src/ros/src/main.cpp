@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
   node.param("/airbot_arm_ros/interface", can_if, std::string("can0"));
   node.param("/airbot_arm_ros/end_mode", end_mode, std::string("teacher"));
   ROS_WARN("urdf: %s, interface: %s, end_mode: %s", urdf_path.c_str(), can_if.c_str(), end_mode.c_str());
-  arm::Robot<6> robot(urdf_path, can_if, "down", M_PI, end_mode);
+  arm::Robot<6> robot(urdf_path, can_if, "down", 0.5*M_PI, end_mode);
 
   /**
    * Initialize ROS publisher and subscriber
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
       "/airbot_play/gripper/set_position", 10,
       {[&robot](const std_msgs::Float64::ConstPtr& end) { robot.set_target_end(std::clamp(end->data, 0.0, 1.0)); }});
 
-  auto scale = 0.001d;
+  auto scale = 0.0001d;
   auto angle_scale = 0.01d;
   auto recording = false;
   auto compensating = false;
@@ -90,6 +90,7 @@ int main(int argc, char** argv) {
 
   auto joy_msgs_subscriber = node.subscribe<Joy>(
       "/joy_latched", 10, {[&robot, &scale, &angle_scale, &joint_mode](const JoyPtr& joy) {
+
         bool flag = false;
         joint_mode = joy->buttons[4];
         if (!joint_mode) {
@@ -177,7 +178,7 @@ int main(int argc, char** argv) {
         }
         if(joy->buttons[5] == 1){
           robot.set_target_joint_q({0.0d, 0.0d, 0.0d, 0.0d, 0.0d, 0.0d},
-                                         true, 0.1, true);
+                                         true, 0.05, true);
         }
       });
 
